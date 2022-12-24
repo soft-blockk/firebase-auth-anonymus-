@@ -61,11 +61,9 @@ class _AuthenticateState extends State<Authenticate> {
                 ),
                 OutlinedButton(
                   onPressed: () async {
-                    dynamic auth_result = await _auth.signInAnonymously();
-                    if (auth_result == null) {
-                      print('error signing in');
-                    } else {
-                      print(auth_result);
+                    if (_formKey.currentState!.validate()) {
+                      dynamic result = await _auth.signIn(email, password);
+                      print(result);
                     }
                   },
                   style: ButtonStyle(
