@@ -1,15 +1,15 @@
-import 'package:firebase_auth_exp/screens/register.dart';
+import 'package:firebase_auth_exp/screens/authenticate_screen.dart';
 import 'package:flutter/material.dart';
 import '../services/auth.dart';
 
-class Authenticate extends StatefulWidget {
-  const Authenticate({super.key});
+class Register extends StatefulWidget {
+  const Register({super.key});
 
   @override
-  State<Authenticate> createState() => _AuthenticateState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _AuthenticateState extends State<Authenticate> {
+class _RegisterState extends State<Register> {
   final Auth _auth = Auth();
   final _formKey = GlobalKey<FormState>();
 
@@ -61,48 +61,28 @@ class _AuthenticateState extends State<Authenticate> {
                 ),
                 OutlinedButton(
                   onPressed: () async {
-                    dynamic auth_result = await _auth.signInAnonymously();
-                    if (auth_result == null) {
-                      print('error signing in');
-                    } else {
-                      print(auth_result);
+                    if (_formKey.currentState!.validate()) {
+                      try {
+                        dynamic authResult =
+                            await _auth.register(email, password);
+                        if (authResult != null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Authenticate()));
+                        }
+                      } catch (e) {
+                        // ignore: avoid_print
+                        print(e.toString());
+                      }
                     }
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.white),
                   ),
                   child: const Text(
-                    'Sign In',
+                    'Sign Up',
                     style: TextStyle(color: Color.fromARGB(255, 30, 30, 30)),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                OutlinedButton(
-                  onPressed: () async {
-                    dynamic auth_result = await _auth.signInAnonymously();
-                    if (auth_result == null) {
-                      print('error signing in');
-                    } else {
-                      print(auth_result);
-                    }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.white),
-                  ),
-                  child: const Text(
-                    'Sign In Anonymously',
-                    style: TextStyle(color: Color.fromARGB(255, 30, 30, 30)),
-                  ),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                const Text(
-                  'New User?',
-                  style: TextStyle(
-                    fontSize: 12,
                   ),
                 ),
                 const SizedBox(
@@ -110,18 +90,13 @@ class _AuthenticateState extends State<Authenticate> {
                 ),
                 OutlinedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: ((context) => const Register()),
-                      ),
-                    );
+                    Navigator.pop(context);
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.white),
                   ),
                   child: const Text(
-                    'Register',
+                    'Sign In Instead',
                     style: TextStyle(color: Color.fromARGB(255, 30, 30, 30)),
                   ),
                 ),
